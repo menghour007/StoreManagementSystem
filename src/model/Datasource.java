@@ -9,7 +9,7 @@ public class Datasource extends Product {
 
 
 
-    public static final String DB_NAME = "store_management";
+    public static final String DB_NAME = "store_managementsystem";
     public static final String DB_HOST = "localhost";
     public static final String DB_PORT = "5432";
     public static final String DB_USER = "postgres";
