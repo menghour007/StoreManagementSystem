@@ -23,10 +23,7 @@ import java.util.Optional;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
-/**
- * This class handles the admin products page.
- * @author      Sajmir Doko
- */
+
 public class ProductsController {
 
     @FXML
@@ -40,11 +37,7 @@ public class ProductsController {
     @FXML
     private TableView<Product> tableProductsPage;
 
-    /**
-     * This method lists all the product to the view table.
-     * It starts a new Task, gets all the products from the database then bind the results to the view.
-     * @since                   1.0.0
-     */
+
     @FXML
     public void listProducts() {
 
@@ -61,10 +54,6 @@ public class ProductsController {
 
     }
 
-    /**
-     * This private method adds the action buttons to the table rows.
-     * @since                   1.0.0
-     */
     @FXML
     private void addActionButtonsToTable() {
         TableColumn colBtnEdit = new TableColumn("Actions");
@@ -152,11 +141,6 @@ public class ProductsController {
 
     }
 
-    /**
-     * This private method handles the products search functionality.
-     * It creates a new task, gets the search results from the database and binds them to the view table.
-     * @since                   1.0.0
-     */
     @FXML
     private void btnProductsSearchOnAction() {
         Task<ObservableList<Product>> searchProductsTask = new Task<ObservableList<Product>>() {
@@ -171,10 +155,7 @@ public class ProductsController {
         new Thread(searchProductsTask).start();
     }
 
-    /**
-     * This private method loads the add product view page.
-     * @since                   1.0.0
-     */
+
     @FXML
     private void btnAddProductOnClick() {
         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -190,11 +171,7 @@ public class ProductsController {
 
     }
 
-    /**
-     * This private method loads the edit product view page.
-     * @param product_id        Product id.
-     * @since                   1.0.0
-     */
+
     @FXML
     private void btnEditProduct(int product_id) {
         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -213,11 +190,7 @@ public class ProductsController {
 
     }
 
-    /**
-     * This private method loads single add product view page.
-     * @param product_id        Product id.
-     * @since                   1.0.0
-     */
+
     @FXML
     private void btnViewProduct(int product_id) {
         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -235,11 +208,7 @@ public class ProductsController {
         controller.fillViewingProductFields(product_id);
     }
 
-    /**
-     * This private method validates the user input fields for the product.
-     * @return boolean          Returns true or false.
-     * @since                   1.0.0
-     */
+
     @FXML
     boolean areProductInputsValid(String fieldAddProductName, String fieldAddProductDescription, String fieldAddProductPrice, String fieldAddProductQuantity, int productCategoryId) {
         // TODO
@@ -280,11 +249,6 @@ public class ProductsController {
 
     }
 
-    /**
-     * This method returns the TextFormatter for validating as double text input fields.
-     * @return TextFormatter
-     * @since               1.0.0
-     */
     public static TextFormatter<Double> formatDoubleField() {
 //        Pattern validEditingState = Pattern.compile("^[0-9]+(|\\.)[0-9]+$");
         Pattern validEditingState = Pattern.compile("-?(([1-9][0-9]*)|0)?(\\.[0-9]*)?");
@@ -314,11 +278,7 @@ public class ProductsController {
         return new TextFormatter<>(converter, 0.0, filter);
     }
 
-    /**
-     * This method returns the TextFormatter for validating as int text input fields.
-     * @return TextFormatter
-     * @since               1.0.0
-     */
+
     public static TextFormatter<Integer> formatIntField() {
 //        Pattern validEditingState = Pattern.compile("-?(0|[1-9]\\d*)");
         Pattern validEditingState = Pattern.compile("^[0-9]+$");

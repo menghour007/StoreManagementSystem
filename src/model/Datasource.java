@@ -16,13 +16,16 @@ import java.util.List;
  */
 public class Datasource extends Product {
 
-    public static final String DB_NAME = "store_manager.sqlite";
+    // PostgreSQL connection details
 
-    public static final String CONNECTION_STRING = "jdbc:sqlite:C:src\\app\\db\\" + DB_NAME;
+    public static final String DB_NAME = "store_management";
+    public static final String DB_HOST = "localhost";
+    public static final String DB_PORT = "5432";
+    public static final String DB_USER = "postgres";         // ← change this
+    public static final String DB_PASSWORD = "12345"; // ← change this
 
-    // All the database tables and their columns are stored as String variables.
-    // This to facilitate later changing of table/columns names, if needed, for example when expanding
-    // the Datasource Class.
+    public static final String CONNECTION_STRING = "jdbc:postgresql://" + DB_HOST + ":" + DB_PORT + "/" + DB_NAME;
+
     public static final String TABLE_PRODUCTS = "products";
     public static final String COLUMN_PRODUCTS_ID = "id";
     public static final String COLUMN_PRODUCTS_NAME = "name";
@@ -59,53 +62,34 @@ public class Datasource extends Product {
 
     private Connection conn;
 
-    /**
-     * Create an object of Datasource
-     */
     private static final Datasource instance = new Datasource();
 
-    /**
-     * Make the constructor private so that this class cannot be instantiated
-     */
     private Datasource() { }
 
-    /**
-     * Get the only object available
-     * @return      Datasource instance.
-     * @since                   1.0.0
-     */
     public static Datasource getInstance() {
         return instance;
     }
 
-    /**
-     * This method makes the connection to the database and assigns the Connection to the conn variable.
-     * It is designed to be called in the application's Main method.
-     * @return boolean      Returns true or false.
-     * @since               1.0.0
-     */
     public boolean open() {
         try {
-            conn = DriverManager.getConnection(CONNECTION_STRING);
+            Class.forName("org.postgresql.Driver"); // optional in newer Java versions
+            conn = DriverManager.getConnection(CONNECTION_STRING, DB_USER, DB_PASSWORD);
+            System.out.println("✅ Connected to PostgreSQL");
             return true;
-        } catch (SQLException e) {
-            System.out.println("Couldn't connect to database: " + e.getMessage());
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("❌ Couldn't connect to database: " + e.getMessage());
             return false;
         }
     }
 
-    /**
-     * This method closes the connection to the database.
-     * It is designed to be called in the application's Main method.
-     * @since       1.0.0
-     */
     public void close() {
         try {
-            if (conn != null) {
+            if (conn != null && !conn.isClosed()) {
                 conn.close();
+                System.out.println("🔌 Connection closed.");
             }
         } catch (SQLException e) {
-            System.out.println("Couldn't close connection: " + e.getMessage());
+            System.err.println("❌ Couldn't close connection: " + e.getMessage());
         }
     }
 
@@ -348,20 +332,24 @@ public class Datasource extends Product {
 
     /**
      * This method decreases the product stock by one based on the provided product_id.
-     * @param product_id    Product id.
-     * @since                   1.0.0
+     *
+     * @param product_id Product id.
+     * @return
+     * @since 1.0.0
      */
-    public void decreaseStock(int product_id) {
-
+    public Boolean decreaseStock(int product_id) {
         String sql = "UPDATE " + TABLE_PRODUCTS + " SET " + COLUMN_PRODUCTS_QUANTITY + " = " + COLUMN_PRODUCTS_QUANTITY + " - 1 WHERE " + COLUMN_PRODUCTS_ID + " = ?";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setInt(1, product_id);
-            statement.executeUpdate();
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected > 0; // ✅ return true if update succeeded
         } catch (SQLException e) {
-            System.out.println("Query failed: " + e.getMessage());
+            System.out.println("❌ decreaseStock failed: " + e.getMessage());
+            return false;
         }
     }
+
     // END PRODUCTS QUERIES
 
     // BEGIN CATEGORIES QUERIES
@@ -871,8 +859,8 @@ public class Datasource extends Product {
     public Integer countAllCustomers() {
         try (Statement statement = conn.createStatement();
              ResultSet results = statement.executeQuery("SELECT COUNT(*) FROM " + TABLE_USERS +
-                 " WHERE " + COLUMN_USERS_ADMIN + "= 0"
-        )
+                     " WHERE " + COLUMN_USERS_ADMIN + "= 0"
+             )
         ) {
             if (results.next()) {
                 return results.getInt(1);
@@ -907,6 +895,25 @@ public class Datasource extends Product {
             return 0;
         }
     }
+    public boolean insertNewOrder(int productId, int userId, Timestamp orderDate, String orderStatus) {
+        String sql = "INSERT INTO " + TABLE_ORDERS + " (product_id, user_id, order_date, order_status) VALUES (?, ?, ?, ?)";
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setInt(1, productId);
+            statement.setInt(2, userId);
+            statement.setTimestamp(3, orderDate);
+            statement.setString(4, orderStatus);
+
+            int rowsInserted = statement.executeUpdate();
+            return rowsInserted > 0;
+        } catch (SQLException e) {
+            System.out.println("Insert failed: " + e.getMessage());
+            return false;
+        }
+    }
+
+
+
 
 }
 

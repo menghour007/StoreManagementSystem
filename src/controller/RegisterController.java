@@ -18,10 +18,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 
-/**
- * This class handles the registration operations of the application.
- * @author      Sajmir Doko
- */
 public class RegisterController {
 
     @FXML
@@ -36,13 +32,7 @@ public class RegisterController {
     Stage dialogStage = new Stage();
     Scene scene;
 
-    /**
-     * This method handles the login button action event.
-     * It transfers the user screen to the login view.
-     * @param actionEvent       Accepts ActionEvent.
-     * @throws IOException      If an input or output exception occurred.
-     * @since                   1.0.0
-     */
+
     public void handleLoginButtonAction(ActionEvent actionEvent) throws IOException {
         Stage dialogStage;
         Node node = (Node) actionEvent.getSource();
@@ -53,16 +43,7 @@ public class RegisterController {
         dialogStage.show();
     }
 
-    /**
-     * This method handles the register button action event.
-     * It gets the user entered data and makes the proper validations.
-     * If the entered details are correct, it saves the user data to the database,
-     * creates an new UserSessionController instance and transitions the user screen
-     * to the appropriate dashboard.
-     * @param actionEvent       Accepts ActionEvent.
-     * @throws SQLException     If an SQL error occurred.
-     * @since                   1.0.0
-     */
+
     public void handleRegisterButtonAction(ActionEvent actionEvent) throws SQLException {
         String validationErrors = "";
         boolean errors = false;
@@ -71,7 +52,6 @@ public class RegisterController {
         String email = emailField.getText();
         String providedPassword = passwordField.getText();
 
-        // Validate Full Name
         if (fullName == null || fullName.isEmpty()) {
             validationErrors += "Please enter your Name and Surname! \n";
             errors = true;
@@ -80,7 +60,6 @@ public class RegisterController {
             errors = true;
         }
 
-        // Validate Username
         if (username == null || username.isEmpty()) {
             validationErrors += "Please enter a username! \n";
             errors = true;
@@ -95,7 +74,6 @@ public class RegisterController {
             }
         }
 
-        // Validate Email
         if (email == null || email.isEmpty()) {
             validationErrors += "Please enter an email address! \n";
             errors = true;
@@ -110,7 +88,6 @@ public class RegisterController {
             }
         }
 
-        // Validate Password
         if (providedPassword == null || providedPassword.isEmpty()) {
             validationErrors += "Please enter the password! \n";
             errors = true;
@@ -142,7 +119,6 @@ public class RegisterController {
                         err.printStackTrace();
                     }
 
-                    // Method invocation 'getId' may produce 'NullPointerException'
                     assert user != null;
 
                     UserSessionController.setUserId(user.getId());

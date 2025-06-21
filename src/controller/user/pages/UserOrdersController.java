@@ -10,21 +10,13 @@ import javafx.scene.control.TableView;
 import model.Datasource;
 import model.Order;
 
-/**
- * This class handles the users orders page.
- * @author      Sajmir Doko
- */
+
 public class UserOrdersController {
     public TableView tableOrdersPage;
 
-    /**
-     * This method lists all the orders to the view table.
-     * It starts a new Task, gets all the products from the database then bind the results to the view.
-     * @since                   1.0.0
-     */
+
     @FXML
     public void listOrders() {
-
         Task<ObservableList<Order>> getAllOrdersTask = new Task<ObservableList<Order>>() {
             @Override
             protected ObservableList<Order> call() {

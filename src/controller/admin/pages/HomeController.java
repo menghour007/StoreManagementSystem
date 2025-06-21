@@ -5,10 +5,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import model.Datasource;
 
-/**
- * This class handles the admin home page.
- * @author      Sajmir Doko
- */
 public class HomeController {
 
     @FXML
@@ -16,10 +12,7 @@ public class HomeController {
     @FXML
     public Label customersCount;
 
-    /**
-     * This method gets the products count for the admin dashboard and sets it to the productsCount label.
-     * @since                   1.0.0
-     */
+
     public void getDashboardProdCount() {
         Task<Integer> getDashProdCount = new Task<Integer>() {
             @Override
@@ -35,10 +28,7 @@ public class HomeController {
         new Thread(getDashProdCount).start();
     }
 
-    /**
-     * This method gets the customers count for the admin dashboard and sets it to the customersCount label.
-     * @since                   1.0.0
-     */
+
     public void getDashboardCostCount() {
         Task<Integer> getDashCostCount = new Task<Integer>() {
             @Override
@@ -54,7 +44,4 @@ public class HomeController {
         new Thread(getDashCostCount).start();
     }
 
-    // TODO
-    //  Add best sellers
-    //  Add latest sold products
 }

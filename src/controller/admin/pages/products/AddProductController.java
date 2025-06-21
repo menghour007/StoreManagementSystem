@@ -8,9 +8,7 @@ import javafx.scene.text.Text;
 import model.Categories;
 import model.Datasource;
 
-/**
- * {@inheritDoc}
- */
+
 public class AddProductController extends ProductsController {
 
     @FXML
@@ -31,12 +29,6 @@ public class AddProductController extends ProductsController {
         fieldAddProductPrice.setTextFormatter(textFormatterDouble);
         fieldAddProductQuantity.setTextFormatter(textFormatterInt);
     }
-
-    /**
-     * This private method handles the add product button functionality.
-     * It validates user input fields and adds the values to the database.
-     * @since                   1.0.0
-     */
     @FXML
     private void btnAddProductOnAction() {
         Categories category = fieldAddProductCategoryId.getSelectionModel().getSelectedItem();

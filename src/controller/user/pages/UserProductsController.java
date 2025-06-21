@@ -13,14 +13,12 @@ import javafx.util.Callback;
 import model.Datasource;
 import model.Product;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
-/**
- * This class handles the users products page.
- * @author      Sajmir Doko
- */
+
 public class UserProductsController {
 
 
@@ -30,11 +28,7 @@ public class UserProductsController {
     @FXML
     private TableView<Product> tableProductsPage;
 
-    /**
-     * This method lists all the product to the view table.
-     * It starts a new Task, gets all the products from the database then bind the results to the view.
-     * @since                   1.0.0
-     */
+
     @FXML
     public void listProducts() {
 
@@ -51,15 +45,19 @@ public class UserProductsController {
 
     }
 
-    /**
-     * This private method adds the action buttons to the table rows.
-     * @since                   1.0.0
-     */
+
     @FXML
     private void addActionButtonsToTable() {
-        TableColumn colBtnBuy = new TableColumn("Actions");
+        //  Check if the "Actions" column already exists
+        for (TableColumn<?, ?> column : tableProductsPage.getColumns()) {
+            if ("Actions".equals(column.getText())) {
+                return; // Skip adding if it's already there
+            }
+        }
 
-        Callback<TableColumn<Product, Void>, TableCell<Product, Void>> cellFactory = new Callback<TableColumn<Product, Void>, TableCell<Product, Void>>() {
+        TableColumn<Product, Void> colBtnBuy = new TableColumn<>("Actions");
+
+        Callback<TableColumn<Product, Void>, TableCell<Product, Void>> cellFactory =new Callback<TableColumn<Product, Void>, TableCell<Product, Void>>() {
             @Override
             public TableCell<Product, Void> call(final TableColumn<Product, Void> param) {
                 return new TableCell<Product, Void>() {
@@ -70,8 +68,9 @@ public class UserProductsController {
                         buyButton.getStyleClass().add("button");
                         buyButton.getStyleClass().add("xs");
                         buyButton.getStyleClass().add("success");
+
                         buyButton.setOnAction((ActionEvent event) -> {
-                            Product productData = getTableView().getItems().get(getIndex());
+                            Product productData = (Product) getTableView().getItems().get(getIndex());
                             if (productData.getQuantity() <= 0) {
                                 HelperMethods.alertBox("You can't buy this product because there is no stock!", "", "No Stock");
                             } else {
@@ -93,28 +92,16 @@ public class UserProductsController {
                     @Override
                     public void updateItem(Void item, boolean empty) {
                         super.updateItem(item, empty);
-
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(buttonsPane);
-                        }
+                        setGraphic(empty ? null : buttonsPane);
                     }
                 };
             }
         };
 
         colBtnBuy.setCellFactory(cellFactory);
-
         tableProductsPage.getColumns().add(colBtnBuy);
-
     }
 
-    /**
-     * This private method handles the products search functionality.
-     * It creates a new task, gets the search results from the database and binds them to the view table.
-     * @since                   1.0.0
-     */
     @FXML
     private void btnProductsSearchOnAction() {
         Task<ObservableList<Product>> searchProductsTask = new Task<ObservableList<Product>>() {
@@ -130,45 +117,51 @@ public class UserProductsController {
     }
 
 
-    /**
-     * This private method handles the buy product functionality.
-     * @param product_id        Product id.
-     * @param product_name      Product name.
-     * @since                   1.0.0
-     */
+
     @FXML
     private void btnBuyProduct(int product_id, String product_name) {
-
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setHeaderText("You are about to buy " + product_name);
-        alert.setTitle("Buy product?");
+        alert.setHeaderText("You are about to buy \"" + product_name + "\"");
+        alert.setTitle("Buy Product");
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent()) {
-            if (result.get() == ButtonType.OK) {
-                int user_id = UserSessionController.getUserId();
-                String order_date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-                String order_status = "Received";
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            int user_id = UserSessionController.getUserId();
+            Timestamp order_date = new Timestamp(System.currentTimeMillis()); // ✅ Proper timestamp
+            String order_status = "Received";
 
-                Task<Boolean> addProductTask = new Task<Boolean>() {
-                    @Override
-                    protected Boolean call() {
-                        return Datasource.getInstance().insertNewOrder(product_id, user_id, order_date, order_status);
+            Task<Boolean> orderTask = new Task<Boolean>() {
+                @Override
+                protected Boolean call() {
+                    boolean success = Datasource.getInstance().insertNewOrder(product_id, user_id, order_date, order_status);
+
+                    if (success) {
+                        return Datasource.getInstance().decreaseStock(product_id);
                     }
-                };
 
-                addProductTask.setOnSucceeded(e -> {
-                    if (addProductTask.valueProperty().get()) {
-                        Datasource.getInstance().decreaseStock(product_id);
-                        System.out.println("Order placed!");
-                    }
-                });
+                    return false;
+                }
+            };
 
-                new Thread(addProductTask).start();
-                System.out.println(product_id);
-            }
+            orderTask.setOnSucceeded(e -> {
+                if (orderTask.getValue()) {
+                    HelperMethods.alertBox(" Order placed successfully!", "", "Success");
+                    listProducts(); // Refresh table
+                } else {
+                    HelperMethods.alertBox(" Failed to place order. Please try again.", "", "Order Failed");
+                }
+            });
+
+            orderTask.setOnFailed(e -> {
+                HelperMethods.alertBox(" An unexpected error occurred!", "", "Error");
+                orderTask.getException().printStackTrace();
+            });
+
+            new Thread(orderTask).start();
         }
-
     }
+
+
+
 
 }

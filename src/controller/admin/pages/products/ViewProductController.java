@@ -12,9 +12,7 @@ import model.Categories;
 import model.Datasource;
 import model.Product;
 
-/**
- * {@inheritDoc}
- */
+
 public class ViewProductController extends ProductsController {
 
     @FXML
@@ -30,11 +28,7 @@ public class ViewProductController extends ProductsController {
         fieldViewProductCategoryId.setItems(FXCollections.observableArrayList(Datasource.getInstance().getProductCategories(Datasource.ORDER_BY_ASC)));
     }
 
-    /**
-     * This method gets the data for one product from the database and binds the values to viewing fields.
-     * @param product_id        Product id.
-     * @since                   1.0.0
-     */
+
     public void fillViewingProductFields(int product_id) {
         Task<ObservableList<Product>> fillProductTask = new Task<ObservableList<Product>>() {
             @Override

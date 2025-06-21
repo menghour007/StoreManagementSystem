@@ -23,10 +23,7 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-/**
- * This class handles the simple user dashboard interactions.
- * @author      Sajmir Doko
- */
+
 public class UserMainDashboardController implements Initializable {
     public Button btnHome;
     public Button btnProducts;
@@ -39,12 +36,7 @@ public class UserMainDashboardController implements Initializable {
     private Label lblUsrName;
 
 
-    /**
-     * This method handles the Home button click.
-     * It loads the home page and it's contents.
-     * @param actionEvent       Accepts ActionEvent.
-     * @since                   1.0.0
-     */
+
     public void btnHomeOnClick(ActionEvent actionEvent) {
         FXMLLoader fxmlLoader = loadFxmlPage("/view/user/pages/home/home.fxml");
         UserHomeController homeController = fxmlLoader.getController();
@@ -52,37 +44,20 @@ public class UserMainDashboardController implements Initializable {
         homeController.getDashboardOrdersCount();
     }
 
-    /**
-     * This method handles the Orders button click.
-     * It loads the Orders page and it's contents.
-     * @param actionEvent       Accepts ActionEvent.
-     * @since                   1.0.0
-     */
+
     public void btnOrdersOnClick(ActionEvent actionEvent) {
         FXMLLoader fxmlLoader = loadFxmlPage("/view/user/pages/orders/orders.fxml");
         UserOrdersController ordersController = fxmlLoader.getController();
         ordersController.listOrders();
     }
 
-    /**
-     * This method handles the Products button click.
-     * It loads the Products page and it's contents.
-     * @param actionEvent       Accepts ActionEvent.
-     * @since                   1.0.0
-     */
+
     public void btnProductsOnClick(ActionEvent actionEvent) {
         FXMLLoader fxmlLoader = loadFxmlPage("/view/user/pages/products/products.fxml");
         UserProductsController userController = fxmlLoader.getController();
         userController.listProducts();
     }
 
-    /**
-     * This method handles the LogOut button click.
-     * On click and confirmation it opens the login view and clears the user session instance.
-     * @param actionEvent       Accepts ActionEvent.
-     * @throws IOException      If an input or output exception occurred.
-     * @since                   1.0.0
-     */
     public void btnLogOutOnClick(ActionEvent actionEvent) throws IOException {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -103,11 +78,7 @@ public class UserMainDashboardController implements Initializable {
         }
     }
 
-    /**
-     * This private helper method loads the view file.
-     * @param view_path         Accepts path of view file.
-     * @since                   1.0.0
-     */
+
     private FXMLLoader loadFxmlPage(String view_path) {
         FXMLLoader fxmlLoader = new FXMLLoader();
         try {
@@ -122,9 +93,6 @@ public class UserMainDashboardController implements Initializable {
         return fxmlLoader;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         lblUsrName.setText(UserSessionController.getUserFullName());

@@ -13,9 +13,7 @@ import model.Categories;
 import model.Datasource;
 import model.Product;
 
-/**
- * {@inheritDoc}
- */
+
 public class EditProductController extends ProductsController {
 
     @FXML
@@ -38,11 +36,7 @@ public class EditProductController extends ProductsController {
         fieldEditProductQuantity.setTextFormatter(textFormatterInt);
     }
 
-    /**
-     * This private method handles the add product button functionality.
-     * It validates user input fields and adds the values to the database.
-     * @since                   1.0.0
-     */
+
     @FXML
     private void btnEditProductOnAction() {
         Categories category = fieldEditProductCategoryId.getSelectionModel().getSelectedItem();
@@ -79,11 +73,7 @@ public class EditProductController extends ProductsController {
         }
     }
 
-    /**
-     * This method gets the data for one product from the database and binds the values to editing fields.
-     * @param product_id        Product id.
-     * @since                   1.0.0
-     */
+
     public void fillEditingProductFields(int product_id) {
         Task<ObservableList<Product>> fillProductTask = new Task<ObservableList<Product>>() {
             @Override
