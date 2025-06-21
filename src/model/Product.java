@@ -1,7 +1,7 @@
 package model;
 
 public class Product {
-
+    //new update
     private int id;
     private String name;
     private String description;

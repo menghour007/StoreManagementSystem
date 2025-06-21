@@ -4,25 +4,16 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * This class handles all the queries to the database.
- * It is constructed with the Singleton Design Pattern.
- *
- * This pattern involves a single class which is responsible to create an object while making sure that only single
- * object gets created. This class provides a way to access its only object which can be accessed directly without
- * need to instantiate the object of the class.
- *
- * @author      Sajmir Doko
- */
+
 public class Datasource extends Product {
 
-    // PostgreSQL connection details
+
 
     public static final String DB_NAME = "store_management";
     public static final String DB_HOST = "localhost";
     public static final String DB_PORT = "5432";
-    public static final String DB_USER = "postgres";         // ← change this
-    public static final String DB_PASSWORD = "12345"; // ← change this
+    public static final String DB_USER = "postgres";
+    public static final String DB_PASSWORD = "12345";
 
     public static final String CONNECTION_STRING = "jdbc:postgresql://" + DB_HOST + ":" + DB_PORT + "/" + DB_NAME;
 
@@ -93,13 +84,7 @@ public class Datasource extends Product {
         }
     }
 
-    // BEGIN PRODUCTS QUERIES
-    /**
-     * This method get all the products from the database.
-     * @param sortOrder     Results sort order.
-     * @return List         Returns Product array list.
-     * @since                   1.0.0
-     */
+
     public List<Product> getAllProducts(int sortOrder) {
 
         StringBuilder queryProducts = queryProducts();
@@ -136,12 +121,7 @@ public class Datasource extends Product {
         }
     }
 
-    /**
-     * This method get one product from the database based on the provided product_id.
-     * @param product_id    Product id.
-     * @return List         Returns Product array list.
-     * @since                   1.0.0
-     */
+
     public List<Product> getOneProduct(int product_id) {
 
         StringBuilder queryProducts = queryProducts();
@@ -170,13 +150,7 @@ public class Datasource extends Product {
         }
     }
 
-    /**
-     * This method searches products from the database based on the provided searchString.
-     * @param searchString  String to search product name or product description.
-     * @param sortOrder     Results sort order.
-     * @return List         Returns Product array list.
-     * @since                   1.0.0
-     */
+
     public List<Product> searchProducts(String searchString, int sortOrder) {
         StringBuilder queryProducts = queryProducts();
         queryProducts.append(" WHERE (" + TABLE_PRODUCTS + "." + COLUMN_PRODUCTS_NAME + " LIKE ? OR " + TABLE_PRODUCTS + "." + COLUMN_PRODUCTS_DESCRIPTION + " LIKE ?)");
@@ -216,11 +190,7 @@ public class Datasource extends Product {
         }
     }
 
-    /**
-     * This private method returns an default query for the products.
-     * @return StringBuilder
-     * @since                   1.0.0
-     */
+
     private StringBuilder queryProducts() {
         return new StringBuilder("SELECT " +
                 TABLE_PRODUCTS + "." + COLUMN_PRODUCTS_ID + ", " +
@@ -238,12 +208,7 @@ public class Datasource extends Product {
         );
     }
 
-    /**
-     * This method deletes one product based on the productId provided.
-     * @param productId     Product id.
-     * @return boolean      Returns true or false.
-     * @since                   1.0.0
-     */
+
     public boolean deleteSingleProduct(int productId) {
         String sql = "DELETE FROM " + TABLE_PRODUCTS + " WHERE " + COLUMN_PRODUCTS_ID + " = ?";
 
@@ -258,16 +223,7 @@ public class Datasource extends Product {
         }
     }
 
-    /**
-     * This method insert one product to the database.
-     * @param name          Product name.
-     * @param description   Product description.
-     * @param price         Product price.
-     * @param quantity      Product quantity.
-     * @param category_id   Product category_id.
-     * @return boolean      Returns true or false.
-     * @since                   1.0.0
-     */
+
     public boolean insertNewProduct(String name, String description, double price, int quantity, int category_id) {
 
         String sql = "INSERT INTO " + TABLE_PRODUCTS + " ("
@@ -293,17 +249,7 @@ public class Datasource extends Product {
         }
     }
 
-    /**
-     * This method updates one product to the database.
-     * @param product_id    Product id.
-     * @param name          Product name.
-     * @param description   Product description.
-     * @param price         Product price.
-     * @param quantity      Product quantity.
-     * @param category_id   Product category_id.
-     * @return boolean      Returns true or false.
-     * @since                   1.0.0
-     */
+
     public boolean updateOneProduct(int product_id, String name, String description, double price, int quantity, int category_id) {
 
         String sql = "UPDATE " + TABLE_PRODUCTS + " SET "
@@ -330,13 +276,7 @@ public class Datasource extends Product {
         }
     }
 
-    /**
-     * This method decreases the product stock by one based on the provided product_id.
-     *
-     * @param product_id Product id.
-     * @return
-     * @since 1.0.0
-     */
+
     public Boolean decreaseStock(int product_id) {
         String sql = "UPDATE " + TABLE_PRODUCTS + " SET " + COLUMN_PRODUCTS_QUANTITY + " = " + COLUMN_PRODUCTS_QUANTITY + " - 1 WHERE " + COLUMN_PRODUCTS_ID + " = ?";
 
@@ -350,16 +290,7 @@ public class Datasource extends Product {
         }
     }
 
-    // END PRODUCTS QUERIES
 
-    // BEGIN CATEGORIES QUERIES
-
-    /**
-     * This method gets all the product categories from the database.
-     * @param sortOrder     Results sort order.
-     * @return List         Returns Categories array list.
-     * @since                   1.0.0
-     */
     public List<Categories> getProductCategories(int sortOrder) {
         StringBuilder queryCategories = new StringBuilder("SELECT " +
                 TABLE_CATEGORIES + "." + COLUMN_CATEGORIES_ID + ", " +
@@ -395,15 +326,7 @@ public class Datasource extends Product {
             return null;
         }
     }
-    // END CATEGORIES QUERIES
 
-    // BEGIN CUSTOMERS QUERIES
-    /**
-     * This method get all the customers from the database.
-     * @param sortOrder     Results sort order.
-     * @return List         Returns Customer array list.
-     * @since                   1.0.0
-     */
     public List<Customer> getAllCustomers(int sortOrder) {
 
         StringBuilder queryCustomers = queryCustomers();
@@ -439,12 +362,7 @@ public class Datasource extends Product {
         }
     }
 
-    /**
-     * This method get one customer from the database based on the provided product_id.
-     * @param customer_id   Customer id.
-     * @return List         Returns Product array list.
-     * @since                   1.0.0
-     */
+
     public List<Customer> getOneCustomer(int customer_id) {
 
         StringBuilder queryCustomers = queryCustomers();
@@ -471,13 +389,7 @@ public class Datasource extends Product {
         }
     }
 
-    /**
-     * This method searches customers from the database based on the provided searchString.
-     * @param searchString  String to search product name or product description.
-     * @param sortOrder     Results sort order.
-     * @return List         Returns Product array list.
-     * @since                   1.0.0
-     */
+
     public List<Customer> searchCustomers(String searchString, int sortOrder) {
 
         StringBuilder queryCustomers = queryCustomers();
@@ -518,11 +430,7 @@ public class Datasource extends Product {
         }
     }
 
-    /**
-     * This private method returns an default query for the customers.
-     * @return StringBuilder
-     * @since                   1.0.0
-     */
+
     private StringBuilder queryCustomers() {
         return new StringBuilder("SELECT " +
                 TABLE_USERS + "." + COLUMN_USERS_ID + ", " +
@@ -536,12 +444,7 @@ public class Datasource extends Product {
         );
     }
 
-    /**
-     * This method deletes one customer based on the customerId provided.
-     * @param customerId    Customer id.
-     * @return boolean      Returns true or false.
-     * @since                   1.0.0
-     */
+
     public boolean deleteSingleCustomer(int customerId) {
         String sql = "DELETE FROM " + TABLE_USERS + " WHERE " + COLUMN_USERS_ID + " = ?";
 
@@ -568,17 +471,7 @@ public class Datasource extends Product {
             return false;
         }
     }
-    // END CUSTOMERS QUERIES
 
-    // BEGIN CUSTOMERS QUERIES
-
-    /**
-     * This method gets one user from the database based on the email provided.
-     * @param email             Accepts email string.
-     * @throws SQLException     If an SQL error occurred.
-     * @return User             Returns the User Object.
-     * @since                   1.0.0
-     */
     public User getUserByEmail(String email) throws SQLException {
 
         PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_USERS_EMAIL + " = ?");
@@ -602,13 +495,7 @@ public class Datasource extends Product {
         return user;
     }
 
-    /**
-     * This method gets one user from the database based on the username provided.
-     * @param username          Accepts username string.
-     * @throws SQLException     If an SQL error occurred.
-     * @return User             Returns the User Object.
-     * @since                   1.0.0
-     */
+
     public User getUserByUsername(String username) throws SQLException {
 
         PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_USERS_USERNAME + " = ?");
@@ -632,16 +519,7 @@ public class Datasource extends Product {
         return user;
     }
 
-    /**
-     * This method insert one simple user to the database.
-     * @param fullName      Users full name.
-     * @param username      Users username
-     * @param email         Users email.
-     * @param password      Users password.
-     * @param salt          Users salt.
-     * @return boolean      Returns true or false.
-     * @since                   1.0.0
-     */
+
     public boolean insertNewUser(String fullName, String username, String email, String password, String salt) {
 
         String sql = "INSERT INTO " + TABLE_USERS + " ("
@@ -668,15 +546,7 @@ public class Datasource extends Product {
             return false;
         }
     }
-    // END CUSTOMERS QUERIES
 
-    // BEGIN ORDERS QUERIES
-    /**
-     * This method gets all orders from the database.
-     * @param sortOrder     Results sort order.
-     * @return List         Returns Order array list.
-     * @since                   1.0.0
-     */
     public List<Order> getAllOrders(int sortOrder) {
 
         StringBuilder queryOrders = new StringBuilder("SELECT " +
@@ -734,13 +604,7 @@ public class Datasource extends Product {
         }
     }
 
-    /**
-     * This method gets all orders of the simple user from the database.
-     * @param sortOrder     Results sort order.
-     * @param user_id       Provided user id.
-     * @return List         Returns Order array list.
-     * @since                   1.0.0
-     */
+
     public List<Order> getAllUserOrders(int sortOrder, int user_id) {
 
         StringBuilder queryOrders = new StringBuilder("SELECT " +
@@ -799,15 +663,7 @@ public class Datasource extends Product {
         }
     }
 
-    /**
-     * This method insert one order to the database.
-     * @param product_id    Product id.
-     * @param user_id       Users id.
-     * @param order_date    Order date.
-     * @param order_status  Order status.
-     * @return boolean      Returns true or false.
-     * @since                   1.0.0
-     */
+
     public boolean insertNewOrder(int product_id, int user_id, String order_date, String order_status) {
 
         String sql = "INSERT INTO " + TABLE_ORDERS + " ("
@@ -830,13 +686,7 @@ public class Datasource extends Product {
             return false;
         }
     }
-    // END ORDERS QUERIES
 
-    /**
-     * This method counts all the products on the database.
-     * @return int      Returns count of the products.
-     * @since                   1.0.0
-     */
     public Integer countAllProducts() {
         try (Statement statement = conn.createStatement();
              ResultSet results = statement.executeQuery("SELECT COUNT(*) FROM " + TABLE_PRODUCTS)) {
@@ -851,11 +701,7 @@ public class Datasource extends Product {
         }
     }
 
-    /**
-     * This method counts all the simple users on the database.
-     * @return int      Returns count of the simple users.
-     * @since                   1.0.0
-     */
+
     public Integer countAllCustomers() {
         try (Statement statement = conn.createStatement();
              ResultSet results = statement.executeQuery("SELECT COUNT(*) FROM " + TABLE_USERS +
@@ -873,12 +719,7 @@ public class Datasource extends Product {
         }
     }
 
-    /**
-     * This method counts all the orders on the database.
-     * @param user_id       Provided user id.
-     * @return int      Returns count of the orders.
-     * @since                   1.0.0
-     */
+
     public Integer countUserOrders(int user_id) {
 
         try (PreparedStatement statement = conn.prepareStatement(String.valueOf("SELECT COUNT(*) FROM " + TABLE_ORDERS + " WHERE " + COLUMN_ORDERS_USER_ID + "= ?"))) {
@@ -913,21 +754,4 @@ public class Datasource extends Product {
     }
 
 
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

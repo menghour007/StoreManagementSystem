@@ -1,7 +1,7 @@
 package model;
 
 public class User {
-
+    //new update
     private int id;
     private String fullname;
     private String username;

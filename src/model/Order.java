@@ -13,6 +13,7 @@ public class Order {
     private String order_date;
     private String order_status;
     private double order_price;
+    //new update
 
     public int getId() {
         return id;
